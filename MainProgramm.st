@@ -16,7 +16,7 @@ CONFIGURATION PLC_1
         
         // Motor 2
         motor2On AT %Q0.1 : BOOL;
-        myMotor2 : cAxis;
+        //myMotor2 : cAxis;
         myMotor2Status : tAxisStatus;
         posM2 : DINT;
     end_var
@@ -46,7 +46,7 @@ PROGRAM MyBernd /* name of the program */
     
     VAR 
        myVarInProgramm : INT;
-       myMotor2 : cAxis;
+       //myMotor2 : cAxis;
     end_var
 
     myMotor1.execute(run := true, motorOn => motor1On);
