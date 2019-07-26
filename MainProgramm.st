@@ -5,14 +5,20 @@ CONFIGURATION PLC_1
         a : int;
         b : int;
         c : INT;
+        
+        // declare my motors
+
+        //Motor 1
         motor1On AT %Q0.0 : BOOL;
-        motor2On AT %Q0.1 : BOOL;
         myMotor1 : cAxis;
         myMotor1Status : tAxisStatus;
-        myMotor2Status : tAxisStatus;
         posM1 : DINT;
-        posM2 : DINT;
         
+        // Motor 2
+        motor2On AT %Q0.1 : BOOL;
+        myMotor2 : cAxis;
+        myMotor2Status : tAxisStatus;
+        posM2 : DINT;
     end_var
 
     TASK Main(Interval := T#1000ms, Priority := 1);
