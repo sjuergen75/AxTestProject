@@ -5,7 +5,7 @@ CONFIGURATION PLC_1
         a : int;
         b : int;
         c : INT;
-        
+        x : type2;
         // declare my motors
 
         //Motor 1
@@ -16,7 +16,7 @@ CONFIGURATION PLC_1
         
         // Motor 2
         motor2On AT %Q0.1 : BOOL;
-        //myMotor2 : cAxis;
+        myMotor2 : cAxis;
         myMotor2Status : tAxisStatus;
         posM2 : DINT;
     end_var
@@ -36,6 +36,7 @@ PROGRAM MyBernd /* name of the program */
         motor2On : bool;   
         
         myMotor1 : cAxis;
+        myMotor2 : cAxis;
         c : INT;
 
         myMotor1Status : tAxisStatus;
