@@ -29,7 +29,7 @@ CLASS cAxis
         END_VAR
     
             Homing := true;
-
+                        
     END_METHOD
 
     METHOD public execute

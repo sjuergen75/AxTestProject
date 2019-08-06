@@ -1,6 +1,6 @@
 TYPE
     type2 : STRUCT
         a : int;
-        b : type1;
+        b : int;
     END_STRUCT;
 END_TYPE

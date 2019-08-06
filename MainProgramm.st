@@ -57,7 +57,13 @@ PROGRAM MyBernd /* name of the program */
 
     posM1 := myMotor1.GetPos();
     posM2 := myMotor2.GetPos();
-
+    IF true THEN
+        ;
+    ELSIF true THEN
+        ;
+    ELSE
+        ;
+    END_IF;
 
     c := c + 1;
     myVarInProgramm := myVarInProgramm + 1;
