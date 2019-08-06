@@ -55,6 +55,7 @@ PROGRAM MyBernd /* name of the program */
     myMotor1Status := myMotor1.GetStatus();
     myMotor2Status := myMotor2.GetStatus();
 
+
     posM1 := myMotor1.GetPos();
     posM2 := myMotor2.GetPos();
     IF true THEN

@@ -1,9 +1,10 @@
-CLASS cAxis
+CLASS Axis
 
     VAR PUBLIC
         mParameter : tAxisParameter;
         m1 : tAxisParameter;
         mStatus : tAxisStatus;
+        run : BOOL;        
     END_VAR
 
     VAR PRIVATE       
@@ -17,6 +18,10 @@ CLASS cAxis
         mDone : BOOL;
         mError : BOOL;
     END_VAR
+
+    METHOD PUBLIC Main        
+        ;
+    END_METHOD
 
     METHOD PUBLIC  GetStatus : tAxisStatus
         GetStatus := mStatus;    
@@ -42,7 +47,12 @@ CLASS cAxis
                         
     END_METHOD
 
+    METHOD PRIVATE mHoming
+        ;
+    END_METHOD
     
+    
+
     //---------------------------------------------------
     // Reset
     //---------------------------------------------------
