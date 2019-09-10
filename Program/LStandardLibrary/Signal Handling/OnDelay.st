@@ -5,7 +5,7 @@ NAMESPACE stdLib.Timer
             m_status : Timerstatus;
             m_old : BOOL;
             m_isRunning : BOOL;
-            m_PT : INT;
+            m_PT : INT;            
         END_VAR
 
         METHOD Start
@@ -13,13 +13,12 @@ NAMESPACE stdLib.Timer
                 PT : INT;
                 Retrigger : BOOL := false;
             END_VAR
-            VAR_TEMP
-            END_VAR                
-                if (retrigger OR NOT(m_isRunning)) THEN
-                    m_PT := PT;
-                    m_status.ET := m_PT;
-                    m_isRunning := true;
-                END_IF;
+             
+            IF (retrigger OR NOT(m_isRunning)) THEN
+                m_PT := PT;
+                m_status.ET := m_PT;
+                m_isRunning := true;
+            END_IF;
         END_METHOD
 
         METHOD Execute : BOOL
