@@ -1,4 +1,4 @@
-NAMESPACE stdLib
+NAMESPACE stdLib.Motion
     TYPE
         tAxisParameter : STRUCT
             // dynamic values

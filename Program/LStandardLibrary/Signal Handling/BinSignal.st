@@ -24,8 +24,9 @@ NAMESPACE stdLib.SignalHandling
             END_IF;
 
             m_Status.QRis := sig AND NOT(m_Old);
-            m_Status.QFal := NOT(sig) AND m_Old;
+            m_Status.QFal := NOT(sig) AND m_Old;            
             m_Old := sig;
+            m_status.Q := sig;
             
 
             execute := m_status;

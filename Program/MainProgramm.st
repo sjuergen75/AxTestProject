@@ -4,24 +4,21 @@ CONFIGURATION PLC_1
     var_global
         a : int := 0;
         b : int;
-        c : INT;
-        x : type2;
+        c : INT;       
         xAr : array[1..4] of int;
-        testDefaults : tDefaults;
-        myArray : nArray;
         // declare my motors
 
         //Motor 1
         motor1On AT %Q0.0 : BOOL;
-        myMotor1 : stdLib.Axis;
+        myMotor1 : stdLib.Motion.Axis;
 
-        myMotor1Status : stdLib.tAxisStatus;
+        myMotor1Status : stdLib.Motion.tAxisStatus;
         posM1 : DINT;
         
         // Motor 2
         motor2On AT %Q0.1 : BOOL;
-        myMotor2 : stdLib.Axis;
-        myMotor2Status : stdLib.tAxisStatus;
+        myMotor2 : stdLib.Motion.Axis;
+        myMotor2Status : stdLib.Motion.tAxisStatus;
         posM2 : DINT;
     end_var
 
@@ -42,21 +39,21 @@ PROGRAM MyBernd /* name of the program */
         motor1On : bool;   
         motor2On : bool;   
         
-        myMotor1 : stdLib.Axis;
-        myMotor2 : stdLib.Axis;
+        myMotor1 : stdLib.Motion.Axis;
+        myMotor2 : stdLib.Motion.Axis;
 
         c : INT;
-        testDefaults : tDefaults;
+    
 
 
-        myMotor1Status : stdLib.tAxisStatus;
-        myMotor2Status : stdLib.tAxisStatus;
+        myMotor1Status : stdLib.Motion.tAxisStatus;
+        myMotor2Status : stdLib.Motion.tAxisStatus;
         posM1 : DINT;
         posM2 : DINT;
-        myArray : nArray;
+
     END_VAR (*end of variable declaration*)
     VAR_TEMP
-        tempVar : tDefaults;
+
     END_VAR
     
     VAR 
@@ -65,11 +62,6 @@ PROGRAM MyBernd /* name of the program */
        
     end_var
 
-    tempVar.a := myVarInProgramm;
-    tempVar.b := myArray[2];
-    testDefaults := tempVar;
-    
-    c := Aa.inner.innerFunc();
 
     //myMotor1Status := myMotor1.GetStatus();
     //myMotor2Status := myMotor2.Homing();

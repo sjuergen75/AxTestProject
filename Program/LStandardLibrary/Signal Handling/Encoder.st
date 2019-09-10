@@ -7,12 +7,12 @@ NAMESPACE stdLib.SignalHandling
         END_VAR
 
         // Reset encoder position to zero
-        METHOD Reset
+        METHOD PUBLIC Reset
             m_status.position := DINT#0;
         END_METHOD
 
         //Set encoder to specific position
-        METHOD Set
+        METHOD PUBLIC Set
             VAR_INPUT
                 position : DINT;
             END_VAR
@@ -74,6 +74,16 @@ NAMESPACE stdLib.SignalHandling
             GetStatus := m_status;
             m_status.increments := DINT#0;
         END_METHOD
+
+        METHOD PUBLIC SetInternals
+            VAR_INPUT
+                aOld : BOOL;
+                bOld : BOOL; 
+            END_VAR
+            m_aOld := aOld;
+            m_bOld := bOld;
+        END_METHOD
+
     END_CLASS
 
     
@@ -89,51 +99,3 @@ NAMESPACE stdLib.SignalHandling
 END_NAMESPACE
 
 
-NAMESPACE StdLibTesting
-    {Test(a := 1, b := 0, aOld := 0, bOld := 0, dir := 0, pos := DINT#1)}
-    {Test(a := 1, b := 1, aOld := 1, bOld := 0, dir := 0, pos := DINT#1)}
-    {Test(a := 0, b := 1, aOld := 1, bOld := 1, dir := 0, pos := DINT#1)}
-    {Test(a := 0, b := 0, aOld := 0, bOld := 1, dir := 0, pos := DINT#1)}
-    
-    {Test(a := 1, b := 1, aOld := 0, bOld := 1, dir := 1, pos := DINT#-1)}
-    {Test(a := 0, b := 1, aOld := 0, bOld := 0, dir := 1, pos := DINT#-1)}
-    {Test(a := 0, b := 0, aOld := 1, bOld := 0, dir := 1, pos := DINT#-1)}
-    {Test(a := 1, b := 0, aOld := 1, bOld := 1, dir := 1, pos := DINT#-1)}
-    
-    FUNCTION EncoderDirection
-        VAR_INPUT
-            a : INT;
-            b : INT;
-            aOld : INT;
-            bOld : INT;
-            dir : INT;
-            pos : DINT;
-        END_VAR
-        VAR
-            tA : BOOL;
-            tB : BOOL;
-            tAOld : BOOL;
-            tBOld : BOOL;
-            tDir : BOOL;
-            o : stdLib.SignalHandling.Encoder;
-            status : stdLib.SignalHandling.EncoderStatus;
-        END_VAR
-        tA := a <> 0;
-        tB := b <> 0;
-        tAOld := aOld <> 0;
-        tBold := bOld <> 0;
-        tDir := dir <> 0;
-        o.Evaluate(tAOld, tBOld);
-        o.Evaluate(tA, tB);
-        status := o.GetStatus();
-
-        Assert_Equal_BOOL(expected := tDir, actual := status.direction);
-        Assert_Equal_DINT(expected := pos, actual := status.position);
-        Assert_Equal_DINT(expected := pos, actual := status.increments);
-
-        status := o.GetStatus();
-        Assert_Equal_DINT(expected := pos, actual := status.position);
-        Assert_Equal_DINT(expected := DINT#0, actual := status.increments);
-        ;
-    END_FUNCTION
-END_NAMESPACE

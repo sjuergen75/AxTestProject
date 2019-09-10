@@ -3,8 +3,7 @@ NAMESPACE stdLib.SignalHandling
         
         VAR PRIVATE
             m_status : AnalogSignalStatus;
-            m_Old : BOOL;
-            m_LimiterEnabled : BOOL := FALSE;
+            m_Old : BOOL;            
             m_minValue : LREAL;
             m_maxValue : LREAL;
         END_VAR
@@ -25,8 +24,8 @@ NAMESPACE stdLib.SignalHandling
                 max : LREAL;
             END_VAR
             m_minValue := min;
-            m_maxValue := max;
-            m_LimiterEnabled := TRUE;    
+            m_maxValue := max;             
+            m_Status.LimiterIsEnabled := TRUE; 
         END_METHOD
 
         //##################################################################
@@ -37,7 +36,7 @@ NAMESPACE stdLib.SignalHandling
         // set, if the signal exceeds the limits. 
         //##################################################################
         METHOD PUBLIC DisableLimiter
-            m_LimiterEnabled := FALSE;    
+            m_Status.LimiterIsEnabled := FALSE;    
         END_METHOD
 
 
@@ -46,7 +45,11 @@ NAMESPACE stdLib.SignalHandling
         // 
         // Executes the signal evaluation
         //
-        //
+        // Parameter:
+        // signal : The analog signal to be evaluated
+        // enable : Enables the signal evaluation
+        // qDefault : Default value, if enable = false
+        // Norm : Nomalize factor for signal
         //##################################################################
         METHOD PUBLIC execute : AnalogSignalStatus
             VAR_INPUT
@@ -67,12 +70,20 @@ NAMESPACE stdLib.SignalHandling
             END_IF;
             
             // Check Limits if enabled
-            IF (m_LimiterEnabled) THEN
+            IF (m_Status.LimiterIsEnabled) THEN
                 m_status.MaxLimitReached := (actValue >= m_maxValue);
                 m_status.MinLimitReached := (actValue <= m_minValue);
             ELSE
                 m_status.MaxLimitReached := FALSE;
                 m_status.MinLimitReached := FALSE;
+            END_IF;
+
+            IF (m_status.MaxLimitReached) THEN
+                m_status.Q := m_maxValue;
+            ELSIF (m_status.MinLimitReached) THEN
+                m_status.Q := m_minValue;
+            ELSE
+                m_status.Q := actValue;
             END_IF;
 
             execute := m_status;
@@ -87,6 +98,7 @@ NAMESPACE stdLib.SignalHandling
             QBad : BOOL;
             MaxLimitReached : BOOL;
             MinLimitReached : BOOL;
+            LimiterIsEnabled : BOOL := FALSE;
         END_STRUCT;
     END_TYPE
 

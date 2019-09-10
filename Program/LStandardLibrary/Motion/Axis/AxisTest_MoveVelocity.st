@@ -9,8 +9,8 @@ FUNCTION moveVelocityRunOk
     END_VAR
     VAR_TEMP
         res2 : BOOL;
-        axis : stdLib.Axis;
-        status : stdLib.enStatus;
+        axis : stdLib.Motion.Axis;
+        status : stdLib.Motion.enStatus;
         //boFault : BOOL;
     END_VAR
     
@@ -30,8 +30,8 @@ END_FUNCTION
 FUNCTION moveVelocityRunFalse
     VAR_TEMP
         res : BOOL;
-        axis : stdLib.Axis;
-        status : stdLib.enStatus;
+        axis : stdLib.Motion.Axis;
+        status : stdLib.Motion.enStatus;
     END_VAR
     
     axis.faultActive := true;

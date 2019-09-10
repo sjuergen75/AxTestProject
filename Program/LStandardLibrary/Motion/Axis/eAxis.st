@@ -1,4 +1,4 @@
-NAMESPACE stdLib
+NAMESPACE stdLib.Motion
     TYPE
         enStatus : STRUCT
             done : BOOL;

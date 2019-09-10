@@ -15,7 +15,7 @@ NAMESPACE System.Math
         END_FUNCTION
 
         FUNCTION MaxDInt : DINT    
-                MaxDInt := DINT#32767;
+                MaxDInt := DINT#2147483647;
         END_FUNCTION
         
         FUNCTION MinDInt : DINT    

@@ -1,4 +1,4 @@
-NAMESPACE stdLib
+NAMESPACE stdLib.Motion
     CLASS Axis
 
         VAR PUBLIC
