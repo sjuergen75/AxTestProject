@@ -7,6 +7,9 @@ CONFIGURATION PLC_1
         c : INT;       
         xAr : array[1..4] of int;
         // declare my motors
+        isRunnning : BOOL;
+        isElapsed : BOOL;
+        sysLibTimer : DINT;
 
         //Motor 1
         motor1On AT %Q0.0 : BOOL;
@@ -20,16 +23,18 @@ CONFIGURATION PLC_1
         myMotor2 : stdLib.Motion.Axis;
         myMotor2Status : stdLib.Motion.tAxisStatus;
         posM2 : DINT;
+        clock : stdLib.Timer.ClockGenerator;
+        
     end_var
 
-    TASK Main(Interval := T#1000ms, Priority := 1);
-
-    
-
+    TASK Main(Priority := 1);
+    TASK System(Interval := T#10ms, Priority := 1);    
 
     PROGRAM P1 WITH Main : MyBernd;
-    PROGRAM P2 WITH Main : MyBernd;
+    PROGRAM P2 WITH System : Timer;
+
 END_CONFIGURATION
+
 
 PROGRAM MyBernd /* name of the program */
 
@@ -43,14 +48,17 @@ PROGRAM MyBernd /* name of the program */
         myMotor2 : stdLib.Motion.Axis;
 
         c : INT;
-    
-
 
         myMotor1Status : stdLib.Motion.tAxisStatus;
         myMotor2Status : stdLib.Motion.tAxisStatus;
         posM1 : DINT;
         posM2 : DINT;
+        isRunnning : BOOL;
+        isElapsed : BOOL;
+        clock : stdLib.Timer.ClockGenerator;
 
+
+        sysLibTimer : DINT;
     END_VAR (*end of variable declaration*)
     VAR_TEMP
 
@@ -73,14 +81,13 @@ PROGRAM MyBernd /* name of the program */
 
     posM1 := myMotor1.GetPos();
     posM2 := myMotor2.GetPos();
-    IF true THEN
-        ;
-    ELSIF true THEN
-        ;
-    ELSE
-        ;
-    END_IF;
 
     c := c + 1;
     myVarInProgramm := myVarInProgramm + 1;
+    clock.Execute(pulse := DINT#500, pause := DINT#500, sysLibTimer := sysLibTimer);
+    
+
+    isRunnning := clock.Q();
+
+
 END_PROGRAM

@@ -1,60 +1,87 @@
 NAMESPACE stdLib.Timer
+    //##################################################################
+    // Class: OnDelay
+    //
+    // Description: provides a on delay in OOP
+    //##################################################################
     CLASS OnDelay
         VAR
-            m_timeElapsed : INT;
+            m_timeElapsed : DINT;
             m_status : Timerstatus;
             m_old : BOOL;
             m_isRunning : BOOL;
-            m_PT : INT;            
+            m_PT : DINT;          
+            m_timeOld : DINT;  
         END_VAR
 
-        METHOD Start
+        VAR PUBLIC 
+        END_VAR
+
+        
+        //##################################################################
+        // Method Reset
+        // 
+        // Reset a timer. Q will be reset to FALSE
+        //##################################################################
+        METHOD PUBLIC Reset
+            m_isRunning := FALSE;
+            m_status.Q := FALSE;
+            m_status.ET := DINT#0;
+            m_PT := DINT#0;            
+        END_METHOD
+
+
+        METHOD PUBLIC Start
             VAR_INPUT
-                PT : INT;
+                PT : DINT;
                 Retrigger : BOOL := false;
             END_VAR
              
             IF (retrigger OR NOT(m_isRunning)) THEN
                 m_PT := PT;
                 m_status.ET := m_PT;
-                m_isRunning := true;
+                m_status.Q := FALSE;
+                m_isRunning := TRUE;
             END_IF;
         END_METHOD
 
-        METHOD Execute : BOOL
+
+
+        METHOD PUBLIC Execute : BOOL
+
+            VAR_EXTERNAL
+            END_VAR
+            
             VAR_INPUT
+                sysLibTimer : DINT;
             END_VAR
-            VAR_TEMP
-                tQ : BOOL;
+            VAR_TEMP               
+                tTimeDifference : DINT;
             END_VAR
-        
-            if (m_status.ET > m_PT) then 
-                m_status.ET := m_status.ET - 1;
+
+
+            tTimeDifference := ((sysLibTimer - m_timeOld) +  System.Const.MaxTimer()) MOD  System.Const.MaxTimer();
+            m_timeOld := sysLibTimer;
+
+            if (m_isRunning) then 
+                m_status.ET := m_status.ET - tTimeDifference;
             end_if;
 
-            if (m_status.ET <= m_PT) then 
-                tQ := true;
+            if (m_status.ET <= DINT#0 AND m_isRunning) then 
+                m_status.Q := true;
                 m_isRunning := false;
-            ELSE
-                tQ := false;
             END_IF;      
-            m_status.Q := tQ;
-            Execute := tQ;          
+            Execute := m_status.Q;          
         END_METHOD
 
 
-        METHOD Q : BOOL
-            VAR_INPUT
-            END_VAR
-            VAR_TEMP
-            END_VAR
-            Q := m_status.Q;
-                ;
+        METHOD PUBLIC Q : BOOL
+            Q := m_status.Q;                
         END_METHOD
 
 
 
-        METHOD GetStatus : Timerstatus
+        METHOD PUBLIC GetStatus : Timerstatus
             VAR_INPUT
             END_VAR
             VAR_TEMP
@@ -68,7 +95,7 @@ NAMESPACE stdLib.Timer
     TYPE Timerstatus : 
         STRUCT
             Q : BOOL;
-            ET : INT;
+            ET : DINT;
         END_STRUCT;
     END_TYPE
 

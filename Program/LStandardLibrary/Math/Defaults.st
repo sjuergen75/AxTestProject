@@ -1,4 +1,4 @@
-NAMESPACE System.Math
+NAMESPACE System
 
     NAMESPACE Const
     
@@ -20,6 +20,10 @@ NAMESPACE System.Math
         
         FUNCTION MinDInt : DINT    
                 MinDInt := DINT#-2147483647;
+        END_FUNCTION
+
+        FUNCTION MaxTimer : DINT
+            MaxTimer := DINT#10000000;
         END_FUNCTION
 
     END_NAMESPACE
