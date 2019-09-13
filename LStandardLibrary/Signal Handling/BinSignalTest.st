@@ -35,7 +35,7 @@ NAMESPACE StdLibTesting.BinSignal
         tExpQ := iExpQ <> 0;
         tExpQBad := iExpQBad <> 0;
         
-        status := o.execute(signal := tSignal, enable := tEnable, qDefault := tDefault);
+        status := o.set(signal := tSignal, valid := tEnable, default := tDefault);
         Assert_Equal_BOOL(expected := tExpQ, actual := status.Q);
         ;
             ;
@@ -77,15 +77,15 @@ NAMESPACE StdLibTesting.BinSignal
 
     
         if (tTestFallingEdge) then 
-            status := o.execute(signal := true, enable := tEnable, qDefault := tDefault); 
+            status := o.set(signal := true, valid := tEnable, default := tDefault); 
         END_IF;
 
-        status := o.execute(signal := tSignal, enable := tEnable, qDefault := tDefault);
+        status := o.set(signal := tSignal, valid := tEnable, default := tDefault);
         Assert_Equal_BOOL(expected := tExpQ, actual := status.Q);
         Assert_Equal_BOOL(expected := tExpQRis, actual := status.QRis);
         Assert_Equal_BOOL(expected := tExpQFal, actual := status.QFal);
         
-        status := o.execute(signal := tSignal, enable := tEnable, qDefault := tDefault);
+        status := o.set(signal := tSignal, valid := tEnable, default := tDefault);
         Assert_Equal_BOOL(expected := tExpQ, actual := status.Q);
         Assert_Equal_BOOL(expected := false, actual := status.QRis);
         Assert_Equal_BOOL(expected := false, actual := status.QFal);

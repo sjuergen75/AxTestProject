@@ -25,6 +25,8 @@ NAMESPACE stdLib.SignalHandling
             VAR_INPUT
                 a : BOOL;
                 b : BOOL;
+                aOOP : BinSignal;
+                bOOP : BinSignal;
             END_VAR
             VAR_TEMP
                 aRis : BOOL;
@@ -32,6 +34,18 @@ NAMESPACE stdLib.SignalHandling
                 aFal : BOOL;
                 bFal : BOOL;
             END_VAR
+
+            IF (
+                aOOP.QRis() AND NOT(bOOP.Q)
+                OR 
+                aOOP.Q() AND bOOP.QRis()
+                OR aOOP.QFal() AND bOOP.Q()
+                
+                OR NOT(a) AND bFal) THEN   
+                m_status.isInMotion := true;
+                m_status.direction := false;
+                m_status.position := m_status.position + DINT#1; 
+                m_status.increments := m_status.increments + DINT#1; 
 
             aRis := a AND NOT(m_aOld);
             aFal := NOT(a) AND m_aOld;
