@@ -5,6 +5,7 @@ PROGRAM LightStack /* name of the program */
 
     VAR_EXTERNAL
         isInitialized : BOOL;
+        sysLibTimer : DINT;
 
         DQ_0_0 : BOOL;
         DQ_0_1 : BOOL;
@@ -29,39 +30,35 @@ PROGRAM LightStack /* name of the program */
     END_VAR
     
     IF (NOT(isInitialized)) THEN
-        stateINIT.Config(monitoringTime := DINT#1000);
-        stateRed.Config(monitoringTime := DINT#1000);
-        stateYellow.Config(monitoringTime := DINT#1000);
-        stateGreen.Config(monitoringTime := DINT#1000);
+        stateINIT.Config(monitoringTime := DINT#8000);
+        stateRed.Config(monitoringTime := DINT#8000);
+        stateYellow.Config(monitoringTime := DINT#8000);
+        stateGreen.Config(monitoringTime := DINT#8000);
         
         stateINIT.Activate();
-        
         isInitialized := true;
     END_IF;
 
-    stateINIT.Execute();
-    stateRed.Execute();
-    stateYellow.Execute();
-    stateGreen.Execute();
+    stateINIT.Execute(sysLibTimer := sysLibTimer);
+    stateRed.Execute(sysLibTimer := sysLibTimer);
+    stateYellow.Execute(sysLibTimer := sysLibTimer);
+    stateGreen.Execute(sysLibTimer := sysLibTimer);
 
-    
-    stateINIT.NewState(newState := stateRed);
-
-(*
     //-----------------------------
     // Light Control
     //-----------------------------
-    IF (stateINIT.IsActive()) THEN
+    IF (stateINIT.OnTimeOut()) THEN
         lampRed.Set(value := false, Q := Signal_0_0);
         lampYellow.Set(value := false, Q := Signal_0_1);
         lampGreen.Set(value := false, Q := Signal_0_2);
+        stateRed.NewState(refNewState := stateRed);
     END_IF;
 
     //------------------------------------
     // State Red Light
     //------------------------------------
     IF stateRed.OnTimeOut() THEN
-        stateYellow.Activate();
+        stateRed.NewState(refNewState := stateYellow);
     END_IF;
 
     IF (stateRed.HasEntered()) THEN
@@ -74,8 +71,8 @@ PROGRAM LightStack /* name of the program */
     //------------------------------------
     // State Yellow Light
     //------------------------------------
-    IF stateYellow.OnTimeOut() THEN
-        stateGreen.Activate();
+    IF stateYellow.OnTimeOut() THEN        
+        stateRed.NewState(refNewState := stateGreen);
     END_IF;
 
     IF (stateYellow.HasEntered()) THEN
@@ -89,7 +86,7 @@ PROGRAM LightStack /* name of the program */
     // State Green Light
     //------------------------------------
     IF stateGreen.OnTimeOut() THEN
-        stateYellow.Activate();
+        stateRed.NewState(refNewState := stateRed);
     END_IF;
 
     IF (stateGreen.HasEntered()) THEN
@@ -105,6 +102,6 @@ PROGRAM LightStack /* name of the program */
     Signal_0_0.RefToOutput(DQ_0_0);
     Signal_0_1.RefToOutput(DQ_0_1);
     Signal_0_2.RefToOutput(DQ_0_2);
-    *)
+    
     ;
 END_PROGRAM

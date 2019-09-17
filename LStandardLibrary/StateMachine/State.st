@@ -20,15 +20,20 @@ NAMESPACE stdLib.Statemachine
             END_VAR
 
             m_tonMonitoringTime.Execute(sysLibTimer := sysLibTimer);
+
             m_stateHasLeft := false; 
             m_stateHasEnterd := false;
-                   
+            m_timeout := false;       
 
             IF (m_tonMonitoringTime.Q()) THEN
                 m_timeout := true;
                 m_tonMonitoringTime.Reset();
             END_IF;
 
+        END_METHOD
+
+        METHOD m_CleanUpState
+            ;
         END_METHOD
 
         //-------------------------------
@@ -45,10 +50,12 @@ NAMESPACE stdLib.Statemachine
         //-----------------------------------------
         METHOD PUBLIC NewState
             VAR_IN_OUT
-                newState1 : State;
+                refNewState : State;
             END_VAR
-            //newState1.Activate();
+            refNewState.Activate();
             
+            //m_CleanUpState();
+
             m_stepIsActive := false;
             m_stateHasLeft := true;
         END_METHOD
