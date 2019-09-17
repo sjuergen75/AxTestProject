@@ -2,8 +2,8 @@ NAMESPACE stdLib.Timer
     CLASS ClockGenerator
 
     VAR PRIVATE
-        m_timer1 : OnDelay;
-        m_timer2 : OnDelay;
+        m_timer1 : stdLib.Timer.OnDelay;
+        m_timer2 : stdLib.Timer.OnDelay;
         m_isRunning : BOOL;
         m_q : BOOL;
     END_VAR

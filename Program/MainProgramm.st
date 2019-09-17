@@ -1,30 +1,6 @@
 // Basic configuration, check documentation: https://dev.axcite.me/docs/st-language/programming.html#configuration
-CONFIGURATION PLC_1
 
-    var_global
-        sysLibTimer : DINT;
-
-        DI_0_0 AT %I0.0 : BOOL;
-        DQ_0_0 AT %Q0.0 : BOOL;
-        DQ_0_1 AT %Q0.1 : BOOL;
-        S100 : stdLib.SignalHandling.BinSignal;
-        H100 : stdLib.SignalHandling.BinOutput;
-        Q_M1 : stdLib.SignalHandling.BinOutput;
-
-        PushButton : Application.PushButton;
-        Bulb : Application.Bulb;
-        M1 : Application.Motor;
-    end_var
-
-    TASK Main(Priority := 1);
-    TASK System(Interval := T#10ms, Priority := 1);    
-
-    PROGRAM P1 WITH Main : TestProgramm;
-    PROGRAM P2 WITH System : Timer;
-
-END_CONFIGURATION
-
-
+(*
 PROGRAM TestProgramm /* name of the program */
 
     VAR_EXTERNAL
@@ -43,7 +19,8 @@ PROGRAM TestProgramm /* name of the program */
         PushButton : Application.PushButton;
         Bulb : Application.Bulb;
         M1 : Application.Motor;
-    END_VAR (*end of variable declaration*)
+
+    END_VAR
     VAR_TEMP
         res : stdLib.SignalHandling.BinSignalStatus;
     END_VAR
@@ -75,6 +52,7 @@ PROGRAM TestProgramm /* name of the program */
     end_if;
 
     H100.RefToOutput(Q => DQ_0_0);
-    Q_M1.RefToOutput(Q => DQ_0_1);
-    
+    Q_M1.RefToOutput(Q => DQ_0_1);    
+
 END_PROGRAM
+*)

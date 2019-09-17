@@ -1,18 +1,17 @@
 NAMESPACE Application
     
     CLASS Bulb
-        VAR
-            m_switch : stdLib.SignalHandling.BinSignal;
+        VAR            
         END_VAR
 
-        METHOD Set
+        METHOD PUBLIC Set
             VAR_INPUT
-                signal : BOOL;                 
+                value : BOOL;                 
             END_VAR
             VAR_IN_OUT
                 Q : stdLib.SignalHandling.BinOutput;
             END_VAR
-            Q.setQ(value := signal);
+            Q.setQ(value := value);
         END_METHOD
         
         METHOD PUBLIC Toggle

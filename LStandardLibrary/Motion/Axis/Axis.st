@@ -2,9 +2,9 @@ NAMESPACE stdLib.Motion
     CLASS Axis
 
         VAR PUBLIC
-            mParameter : tAxisParameter;
-            m1 : tAxisParameter;
-            mStatus : tAxisStatus;
+            mParameter : stdLib.Motion.tAxisParameter;
+            m1 : stdLib.Motion.tAxisParameter;
+            mStatus : stdLib.Motion.tAxisStatus;
             run : BOOL;       
             faultActive : BOOL; 
         END_VAR
@@ -13,19 +13,19 @@ NAMESPACE stdLib.Motion
             mPosition : DINT;
             mAcceleration : LREAL;
             mDeceleration : LREAL;
-            mPlcOpenStatus : enStatus;
+            mPlcOpenStatus : stdLib.Motion.enStatus;
         END_VAR
 
         METHOD PUBLIC Main        
             ;
         END_METHOD
 
-        METHOD PUBLIC  GetStatus : enStatus
+        METHOD PUBLIC  GetStatus : stdLib.Motion.enStatus
             GetStatus := mPlcOpenStatus;    
         END_METHOD
 
 
-        METHOD PUBLIC  GetInfo : tAxisStatus
+        METHOD PUBLIC  GetInfo : stdLib.Motion.tAxisStatus
             GetInfo := mStatus;    
         END_METHOD
 
@@ -36,7 +36,7 @@ NAMESPACE stdLib.Motion
         //--------------------------------------
         // Homing 
         //--------------------------------------
-        METHOD PUBLIC Homing : enStatus
+        METHOD PUBLIC Homing : stdLib.Motion.enStatus
             VAR_INPUT
                 //velocity : LREAL;
                 //acceleration : LREAL;
@@ -44,7 +44,7 @@ NAMESPACE stdLib.Motion
                 //mode : INT;
             END_VAR
             VAR_TEMP
-                tempStatus : enStatus;
+                tempStatus : stdLib.Motion.enStatus;
             END_VAR
                 Homing := tempStatus;
         END_METHOD
@@ -161,7 +161,7 @@ NAMESPACE stdLib.Motion
 
         METHOD init
             VAR_INPUT
-                parameter : tAxisParameter;
+                parameter : stdLib.Motion.tAxisParameter;
             END_VAR
             ;
             parameter.velocity := 0.0;

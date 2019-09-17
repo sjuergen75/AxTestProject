@@ -58,7 +58,7 @@ NAMESPACE StdLibTesting.Encoder
         tBold := bOld <> 0;
         tDir := dir <> 0;
         o.SetInternals(aOld := tAOld, bOld:= tBold);
-        o.Evaluate(tA, tB);
+        //o.Evaluate(tA, tB);
         status := o.GetStatus();
 
         Assert_Equal_BOOL(expected := tDir, actual := status.direction);
@@ -112,8 +112,8 @@ NAMESPACE StdLibTesting.Encoder
         tA_t0 := a_t0 <> 0;
         tB_t0 := b_t0 <> 0;
         tDir := dir <> 0;        
-        o.Evaluate(tA_t0, tB_t0);
-        o.Evaluate(tA_t1, tB_t1);
+        //o.Evaluate(tA_t0, tB_t0);
+        //o.Evaluate(tA_t1, tB_t1);
         status := o.GetStatus();
 
         Assert_Equal_BOOL(expected := tDir, actual := status.direction);

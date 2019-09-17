@@ -25,8 +25,8 @@ NAMESPACE stdLib.SignalHandling
             VAR_INPUT
                 a : BOOL;
                 b : BOOL;
-                aOOP : BinSignal;
-                bOOP : BinSignal;
+                aOOP : stdLib.SignalHandling.BinSignal;
+                bOOP : stdLib.SignalHandling.BinSignal;
             END_VAR
             VAR_TEMP
                 aRis : BOOL;
@@ -36,42 +36,24 @@ NAMESPACE stdLib.SignalHandling
             END_VAR
 
             IF (
-                aOOP.QRis() AND NOT(bOOP.Q)
-                OR 
-                aOOP.Q() AND bOOP.QRis()
+                aOOP.QRis() AND NOT(bOOP.Q())
+                OR aOOP.Q() AND bOOP.QRis()
                 OR aOOP.QFal() AND bOOP.Q()
-                
-                OR NOT(a) AND bFal) THEN   
+                OR NOT(aOOP.Q()) AND bOOP.qFal())
+                 THEN   
                 m_status.isInMotion := true;
                 m_status.direction := false;
                 m_status.position := m_status.position + DINT#1; 
                 m_status.increments := m_status.increments + DINT#1; 
-
-            aRis := a AND NOT(m_aOld);
-            aFal := NOT(a) AND m_aOld;
-            m_aOld := a;
-
-            bRis := b AND NOT(m_bOld);
-            bFal := NOT(b) AND m_bOld;
-            m_bOld := b;
-
-            //Forward detection
-            IF (
-                aRis AND NOT(b)
-                OR a AND bRis
-                OR aFal AND b
-                OR NOT(a) AND bFal) THEN   
-                m_status.isInMotion := true;
-                m_status.direction := false;
-                m_status.position := m_status.position + DINT#1; 
-                m_status.increments := m_status.increments + DINT#1;
             //Reverse detection
             ELSIF 
-            (
-                aRis AND b
-                OR NOT(a) AND bRis
-                OR aFal AND NOT(b)
-                OR a AND bFal) THEN   
+                
+                (
+                aOOP.QRis() AND bOOP.Q()
+                OR NOT(aOOP.Q()) AND bOOP.QRis()
+                OR aOOP.QFal() AND NOT(bOOP.Q())
+                OR aOOP.Q() AND bOOP.qFal()) THEN
+ 
                 m_status.isInMotion := true;
                 m_status.direction := true;
                 m_status.position := m_status.position - DINT#1; 
