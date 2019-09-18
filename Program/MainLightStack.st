@@ -11,18 +11,19 @@ PROGRAM LightStack /* name of the program */
         DQ_0_1 : BOOL;
         DQ_0_2 : BOOL;
 
-        Signal_0_0 : stdLib.SignalHandling.BinOutput;
-        Signal_0_1 : stdLib.SignalHandling.BinOutput;
-        Signal_0_2 : stdLib.SignalHandling.BinOutput;
+        Signal_0_0_gn : stdLib.SignalHandling.BinOutput;
+        Signal_0_1_ye : stdLib.SignalHandling.BinOutput;
+        Signal_0_2_rd : stdLib.SignalHandling.BinOutput;
 
-        lampRed : Application.Bulb;
-        lampYellow : Application.Bulb;
         lampGreen : Application.Bulb;
+        lampYellow : Application.Bulb;
+        lampRed : Application.Bulb;
 
         stateINIT : stdLib.Statemachine.State;
         stateRed : stdLib.Statemachine.State;
-        stateYellow : stdLib.Statemachine.State;
+        stateRedYe : stdLib.Statemachine.State;
         stateGreen : stdLib.Statemachine.State;
+        stateYellow : stdLib.Statemachine.State;    
 
     END_VAR 
     VAR_TEMP
@@ -30,78 +31,84 @@ PROGRAM LightStack /* name of the program */
     END_VAR
     
     IF (NOT(isInitialized)) THEN
-        stateINIT.Config(monitoringTime := DINT#8000);
-        stateRed.Config(monitoringTime := DINT#8000);
-        stateYellow.Config(monitoringTime := DINT#8000);
-        stateGreen.Config(monitoringTime := DINT#8000);
+        stateINIT.Config(monitoringTime := DINT#4000);
+        stateGreen.Config(monitoringTime := DINT#2000);
+        stateYellow.Config(monitoringTime := DINT#2000);
+        stateRed.Config(monitoringTime := DINT#2000);
         
         stateINIT.Activate();
         isInitialized := true;
     END_IF;
 
     stateINIT.Execute(sysLibTimer := sysLibTimer);
-    stateRed.Execute(sysLibTimer := sysLibTimer);
-    stateYellow.Execute(sysLibTimer := sysLibTimer);
     stateGreen.Execute(sysLibTimer := sysLibTimer);
+    stateYellow.Execute(sysLibTimer := sysLibTimer);
+    stateRed.Execute(sysLibTimer := sysLibTimer);
 
     //-----------------------------
     // Light Control
     //-----------------------------
-    IF (stateINIT.OnTimeOut()) THEN
-        lampRed.Set(value := false, Q := Signal_0_0);
-        lampYellow.Set(value := false, Q := Signal_0_1);
-        lampGreen.Set(value := false, Q := Signal_0_2);
-        stateRed.NewState(refNewState := stateRed);
+    IF (stateINIT.IsActive()) THEN
+        lampGreen.Set(value := TRUE, Q := Signal_0_0_gn);
+        lampYellow.Set(value := TRUE, Q := Signal_0_1_ye);
+        lampRed.Set(value := TRUE, Q := Signal_0_2_rd);
+        
+    END_IF;
+    IF (stateINIT.OnTimeout()) THEN
+        lampGreen.Set(value := FALSE, Q := Signal_0_0_gn);
+        lampYellow.Set(value := FALSE, Q := Signal_0_1_ye);
+        lampRed.Set(value := FALSE, Q := Signal_0_2_rd);
+        stateINIT.NewState(refNewState := stateRed);
     END_IF;
 
     //------------------------------------
-    // State Red Light
+    // State Phase 1 --> Red Light
     //------------------------------------
     IF stateRed.OnTimeOut() THEN
         stateRed.NewState(refNewState := stateYellow);
     END_IF;
 
     IF (stateRed.HasEntered()) THEN
-        lampRed.Set(value := true, Q := Signal_0_0); // Switch on red light
+        lampRed.Set(value := true, Q := Signal_0_2_rd); // Switch on red light
     END_IF;
     IF (stateRed.HasLeft()) THEN
-        lampRed.Set(value := false, Q := Signal_0_0); // Switch off red light    
+        lampRed.Set(value := false, Q := Signal_0_2_rd); // Switch off red light    
     END_IF;
 
     //------------------------------------
-    // State Yellow Light
+    // State Phase 2 --> Yellow
     //------------------------------------
     IF stateYellow.OnTimeOut() THEN        
-        stateRed.NewState(refNewState := stateGreen);
+        stateYellow.NewState(refNewState := stateGreen);
     END_IF;
 
     IF (stateYellow.HasEntered()) THEN
-        lampYellow.Set(value := true, Q := Signal_0_1); // Switch on yellow light
+        lampYellow.Set(value := true, Q := Signal_0_1_ye); // Switch on yellow light
     END_IF;
     IF (stateYellow.HasLeft()) THEN
-        lampYellow.Set(value := false, Q := Signal_0_1); // Switch off yellow light
+        lampYellow.Set(value := false, Q := Signal_0_1_ye); // Switch off yellow light
     END_IF;
     
     //------------------------------------
-    // State Green Light
+    // State Phase 3 --> Green Light
     //------------------------------------
     IF stateGreen.OnTimeOut() THEN
-        stateRed.NewState(refNewState := stateRed);
+        stateGreen.NewState(refNewState := stateGreen);
     END_IF;
 
     IF (stateGreen.HasEntered()) THEN
-        lampGreen.Set(value := true, Q := Signal_0_2); // Switch on green light
+        lampGreen.Set(value := true, Q := Signal_0_0_gn); // Switch on green light
     END_IF;
     IF (stateGreen.HasLeft()) THEN
-        lampGreen.Set(value := false, Q := Signal_0_2); // Switch off green light
+        lampGreen.Set(value := false, Q := Signal_0_0_gn); // Switch off green light
     END_IF;
 
     //##########################################
     // Write Outputs
     //##########################################
-    Signal_0_0.RefToOutput(DQ_0_0);
-    Signal_0_1.RefToOutput(DQ_0_1);
-    Signal_0_2.RefToOutput(DQ_0_2);
+    Signal_0_0_gn.RefToOutput(DQ_0_0);
+    Signal_0_1_ye.RefToOutput(DQ_0_1);
+    Signal_0_2_rd.RefToOutput(DQ_0_2);
     
     ;
 END_PROGRAM

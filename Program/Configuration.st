@@ -6,7 +6,7 @@ CONFIGURATION PLC_1
         DI_0_0 AT %I0.0 : BOOL;
         DQ_0_0 AT %Q0.0 : BOOL;
         DQ_0_1 AT %Q0.1 : BOOL;
-        DQ_0_2 AT %Q0.1 : BOOL;
+        DQ_0_2 AT %Q0.2 : BOOL;
         
         S100 : stdLib.SignalHandling.BinSignal;
         H100 : stdLib.SignalHandling.BinOutput;
@@ -21,9 +21,9 @@ CONFIGURATION PLC_1
         // Programm Light LightStack
         //--------------------------------------------------
         isInitialized : BOOL;
-        Signal_0_0 : stdLib.SignalHandling.BinOutput;
-        Signal_0_1 : stdLib.SignalHandling.BinOutput;
-        Signal_0_2 : stdLib.SignalHandling.BinOutput;
+        Signal_0_0_gn : stdLib.SignalHandling.BinOutput;
+        Signal_0_1_ye : stdLib.SignalHandling.BinOutput;
+        Signal_0_2_rd : stdLib.SignalHandling.BinOutput;
 
         lampRed : Application.Bulb;
         lampYellow : Application.Bulb;
@@ -31,8 +31,9 @@ CONFIGURATION PLC_1
 
         stateINIT : stdLib.Statemachine.State;
         stateRed : stdLib.Statemachine.State;
-        stateYellow : stdLib.Statemachine.State;
+        stateRedYe : stdLib.Statemachine.State;
         stateGreen : stdLib.Statemachine.State;
+        stateYellow : stdLib.Statemachine.State;    
 
     end_var
 

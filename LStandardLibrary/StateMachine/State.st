@@ -2,6 +2,7 @@ NAMESPACE stdLib.Statemachine
 
     CLASS State
         VAR
+            m_RequestActivation : BOOL;
             m_StepId : UINT;
             m_stepIsActive : BOOL;
             m_stateHasLeft : BOOL;
@@ -19,21 +20,44 @@ NAMESPACE stdLib.Statemachine
                 sysLibTimer : DINT;                
             END_VAR
 
-            m_tonMonitoringTime.Execute(sysLibTimer := sysLibTimer);
-
-            m_stateHasLeft := false; 
-            m_stateHasEnterd := false;
-            m_timeout := false;       
-
-            IF (m_tonMonitoringTime.Q()) THEN
-                m_timeout := true;
-                m_tonMonitoringTime.Reset();
+            // Reset HasEntered after one PLC cycle
+            IF (m_stateHasEnterd) THEN
+                m_stateHasEnterd := FALSE;
             END_IF;
+
+            // Reset HasLeft after one PLC cycle
+            IF (m_stateHasLeft) THEN
+                m_stateHasLeft := FALSE;
+            END_IF;    
+
+            // Activate State if it is requested
+            // --> State will be activated one PLC Cycle later
+            IF (m_RequestActivation) THEN
+                m_RequestActivation := FALSE;
+                m_stateHasEnterd := TRUE;
+                m_stepIsActive := TRUE;
+                m_tonMonitoringTime.Start(PT := m_monitoringTime);                   
+            END_IF;
+            
+            m_timeout := FALSE;
+            
+            IF (m_monitoringTime > DINT#0) THEN
+                m_tonMonitoringTime.Execute(sysLibTimer := sysLibTimer);            
+                IF (m_tonMonitoringTime.Q()) THEN
+                    m_timeout := TRUE;
+                    m_tonMonitoringTime.Reset();
+                END_IF;
+            END_IF;
+
+            this.CheckTimeOut(sysLibTimer);
 
         END_METHOD
 
-        METHOD m_CleanUpState
-            ;
+        METHOD PUBLIC CheckTimeOut : BOOL
+            VAR_INPUT
+                sysLibTimer : DINT;
+            END_VAR            
+            CheckTimeOut := FALSE;
         END_METHOD
 
         //-------------------------------
@@ -45,6 +69,7 @@ NAMESPACE stdLib.Statemachine
             END_VAR
             m_monitoringTime := monitoringTime;            
         END_METHOD
+
         //-----------------------------------------
         // Activate new step
         //-----------------------------------------
@@ -52,19 +77,20 @@ NAMESPACE stdLib.Statemachine
             VAR_IN_OUT
                 refNewState : State;
             END_VAR
-            refNewState.Activate();
-            
-            //m_CleanUpState();
+
+            // Only a active state can activate an another state
+            IF (m_stepIsActive) THEN
+                refNewState.Activate();
+            END_IF;            
 
             m_stepIsActive := false;
             m_stateHasLeft := true;
         END_METHOD
 
+
         METHOD PUBLIC Activate
-            m_stateHasEnterd := true;
-            m_stepIsActive := true;
-            m_timeout := false;
-            m_tonMonitoringTime.Start(PT := m_monitoringTime);        
+            // Only a active state can activate an another state
+            m_RequestActivation := true;    
         END_METHOD
 
         //###################################################################
@@ -98,8 +124,6 @@ NAMESPACE stdLib.Statemachine
         METHOD PUBLIC OnTimeOut : BOOL
             OnTimeOut := m_timeout;
         END_METHOD
-
-
     END_CLASS
 
 END_NAMESPACE

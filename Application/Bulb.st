@@ -1,7 +1,8 @@
 NAMESPACE Application
     
     CLASS Bulb
-        VAR            
+        VAR
+            m_State : BOOL;            
         END_VAR
 
         METHOD PUBLIC Set
@@ -11,7 +12,9 @@ NAMESPACE Application
             VAR_IN_OUT
                 Q : stdLib.SignalHandling.BinOutput;
             END_VAR
-            Q.setQ(value := value);
+            
+            Q.SetQ(value := value);
+            m_State := Q.IsOn();
         END_METHOD
         
         METHOD PUBLIC Toggle
@@ -19,7 +22,7 @@ NAMESPACE Application
                 Q : stdLib.SignalHandling.BinOutput;
             END_VAR
                 Q.Toggle();
-                
+                m_State := Q.IsOn();
         END_METHOD        
     END_CLASS
 
