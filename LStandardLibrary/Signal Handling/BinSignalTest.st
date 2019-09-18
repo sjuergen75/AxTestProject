@@ -44,8 +44,10 @@ NAMESPACE StdLibTesting.BinSignal
 
     {Test(iSignal := 1, iEnable := 1, iDefault := 0, iExpQ := 1, iExpQRis := 1, iExpQFal := 0, iTestFallingEdge := 0)}
     {Test(iSignal := 0, iEnable := 1, iDefault := 0, iExpQ := 0, iExpQRis := 0, iExpQFal := 1, iTestFallingEdge := 1)}
-    
-    FUNCTION QRis
+    //-----------------------------------------------------------
+    // test SetOff
+    //-----------------------------------------------------------
+    FUNCTION QRis2
         VAR_INPUT
             iSignal : INT;
             iEnable : INT;
@@ -90,4 +92,69 @@ NAMESPACE StdLibTesting.BinSignal
         Assert_Equal_BOOL(expected := false, actual := status.QRis);
         Assert_Equal_BOOL(expected := false, actual := status.QFal);
     END_FUNCTION
+
+
+
+    //-----------------------------------------------------------
+    // test Q
+    //-----------------------------------------------------------
+    {Test}
+    FUNCTION Q
+        VAR_TEMP
+            o : stdLib.SignalHandling.BinSignal;
+        END_VAR        
+
+        Assert_Equal_BOOL(expected := false, actual := o.Q());
+        o.Set(signal := true);
+        Assert_Equal_BOOL(expected := true, actual := o.Q());
+    END_FUNCTION
+
+    //-----------------------------------------------------------
+    // test QRis
+    //-----------------------------------------------------------
+    {Test}
+    FUNCTION QRis
+        VAR_TEMP
+            o : stdLib.SignalHandling.BinSignal;
+        END_VAR        
+
+        Assert_Equal_BOOL(expected := false, actual := o.QRis());
+        o.Set(signal := true);
+        Assert_Equal_BOOL(expected := true, actual := o.QRis());
+         o.Set(signal := true);
+        Assert_Equal_BOOL(expected := false, actual := o.QRis());
+    END_FUNCTION
+    
+    //-----------------------------------------------------------
+    // test QFal
+    //-----------------------------------------------------------
+    {Test}
+    FUNCTION QFal
+        VAR_TEMP
+            o : stdLib.SignalHandling.BinSignal;
+        END_VAR        
+
+        o.Set(signal := true);
+        Assert_Equal_BOOL(expected := false, actual := o.QFal());
+        o.Set(signal := false);
+        Assert_Equal_BOOL(expected := true, actual := o.QFal());
+         o.Set(signal := false);
+        Assert_Equal_BOOL(expected := false, actual := o.QFal());
+    END_FUNCTION
+
+    //-----------------------------------------------------------
+    // test QBad
+    //-----------------------------------------------------------
+    {Test}
+    FUNCTION QBad
+        VAR_TEMP
+            o : stdLib.SignalHandling.BinSignal;
+        END_VAR        
+
+        o.Set(signal := TRUE, valid := FALSE, default := FALSE);
+        Assert_Equal_BOOL(expected := TRUE, actual := o.QBad());    
+        Assert_Equal_BOOL(expected := FALSE, actual := o.Q());
+    END_FUNCTION
+
+
 END_NAMESPACE

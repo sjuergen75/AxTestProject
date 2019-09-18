@@ -6,7 +6,12 @@ NAMESPACE stdLib.SignalHandling
             m_Old : BOOL;
         END_VAR
 
-        METHOD PUBLIC set : BinSignalStatus
+        //----------------------------------------------------------------
+        // Read digital signal  
+        // (must be executed in every cycle - recommendation: begin of cycle 
+        // in case of digital input signals)
+        //----------------------------------------------------------------
+        METHOD PUBLIC Set : BinSignalStatus
             VAR_INPUT
                 signal : BOOL;
                 valid : BOOL := TRUE;
@@ -32,18 +37,30 @@ NAMESPACE stdLib.SignalHandling
             set := m_status;
         END_METHOD
         
+        //-------------------------------------------------
+        // Returns the status of the signal
+        //-------------------------------------------------
         METHOD PUBLIC Q : BOOL
             Q := m_status.Q;
         END_METHOD
 
+        //-------------------------------------------------
+        // Returns the rising edge
+        //-------------------------------------------------
         METHOD PUBLIC QRis : BOOL
             QRis := m_status.QRis;            
         END_METHOD
 
+        //-------------------------------------------------
+        // Returns the falling edge
+        //-------------------------------------------------
         METHOD PUBLIC QFal : BOOL
             QFal := m_status.QFal;
         END_METHOD
 
+        //-------------------------------------------------
+        // Returns the status QBad
+        //-------------------------------------------------
         METHOD PUBLIC QBad : BOOL
             QBad := m_status.QBad;
         END_METHOD
