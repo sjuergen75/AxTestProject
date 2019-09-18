@@ -36,28 +36,35 @@ NAMESPACE stdLib.Statemachine
                 m_RequestActivation := FALSE;
                 m_stateHasEnterd := TRUE;
                 m_stepIsActive := TRUE;
-                m_tonMonitoringTime.Start(PT := m_monitoringTime);                   
-            END_IF;
-            
-            m_timeout := FALSE;
-            
-            IF (m_monitoringTime > DINT#0) THEN
-                m_tonMonitoringTime.Execute(sysLibTimer := sysLibTimer);            
-                IF (m_tonMonitoringTime.Q()) THEN
-                    m_timeout := TRUE;
-                    m_tonMonitoringTime.Reset();
+                IF (m_monitoringTime > DINT#0) THEN
+                    m_tonMonitoringTime.Start(PT := m_monitoringTime);                   
                 END_IF;
             END_IF;
-
-            this.CheckTimeOut(sysLibTimer);
+            
+            m_timeout := FALSE;            
+            m_timeout := this.CheckTimeOut(sysLibTimer);
 
         END_METHOD
 
-        METHOD PUBLIC CheckTimeOut : BOOL
+        //----------------------------------
+        // private method CheckTimeout
+        // checks when timeout is happened
+        //----------------------------------
+        METHOD CheckTimeOut : BOOL
             VAR_INPUT
                 sysLibTimer : DINT;
             END_VAR            
-            CheckTimeOut := FALSE;
+            IF (m_monitoringTime > DINT#0) THEN
+                m_tonMonitoringTime.Execute(sysLibTimer := sysLibTimer);            
+                IF (m_tonMonitoringTime.Q()) THEN
+                    CheckTimeOut := TRUE;
+                    m_tonMonitoringTime.Reset();
+                ELSE
+                    CheckTimeOut := FALSE;
+                END_IF;
+            ELSE
+                CheckTimeOut := FALSE;
+            END_IF;            
         END_METHOD
 
         //-------------------------------
@@ -73,14 +80,14 @@ NAMESPACE stdLib.Statemachine
         //-----------------------------------------
         // Activate new step
         //-----------------------------------------
-        METHOD PUBLIC NewState
+        METHOD PUBLIC NextState
             VAR_IN_OUT
-                refNewState : State;
+                refNextState : State;
             END_VAR
 
             // Only a active state can activate an another state
             IF (m_stepIsActive) THEN
-                refNewState.Activate();
+                refNextState.Activate();
             END_IF;            
 
             m_stepIsActive := false;
@@ -107,21 +114,29 @@ NAMESPACE stdLib.Statemachine
         //---------------------------------------------
         // State has left by any transition
         //---------------------------------------------        
-        METHOD PUBLIC HasLeft : BOOL
-            HasLeft := m_stateHasLeft;
+        METHOD PUBLIC OnExit : BOOL
+            OnExit := m_stateHasLeft;
         END_METHOD
 
         //---------------------------------------------
         // State has been entered
         //---------------------------------------------        
-        METHOD PUBLIC HasEntered : BOOL
-            HasEntered := m_stateHasEnterd;
+        METHOD PUBLIC OnEntry : BOOL
+            OnEntry := m_stateHasEnterd;
         END_METHOD
 
         //---------------------------------------------
         // State monitoring time has been elapsed
+        // Activate next step 
         //---------------------------------------------        
         METHOD PUBLIC OnTimeOut : BOOL
+            VAR_IN_OUT
+                refNextState : State;
+            END_VAR            
+            IF (m_timeout) THEN
+                this.NextState(refNextState := refNextState);
+            END_IF;
+            
             OnTimeOut := m_timeout;
         END_METHOD
     END_CLASS

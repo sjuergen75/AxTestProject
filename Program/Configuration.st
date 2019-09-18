@@ -34,7 +34,8 @@ CONFIGURATION PLC_1
         stateRedYe : stdLib.Statemachine.State;
         stateGreen : stdLib.Statemachine.State;
         stateYellow : stdLib.Statemachine.State;    
-
+        myTrafficLight : Application.TrafficLight;
+        
     end_var
 
     TASK Main(Priority := 1);
